@@ -1,38 +1,50 @@
-# BinaryToPowershellScript © 2023 Federico Di Marco
+# bin2ps1
+
+## Overview
+
 A simple C# console application to recreate one or more binary files through a Powershell script. You can choose 2 formats: as an explicit **byte array** (default option, either in hex or decimal format, bigger in size, but it should be more difficult to be detected) or as a **base64** string (option -b, it is shorter). By default it will generate a script file for all specified input files with the **_script.ps1** suffix, if the option -s is specified it will generate a single script called either **SingleScript.ps1**. The generated script should work both on standard PowerShell (tested on  5.1.22621.1778) and PowerShell Core (tested on 7.3.7).
 
 In order to bypass the most hardened environments I have implemented the same C# code also in Powershell, you can find it [here](https://github.com/fededim/BinaryToPowershellScript/blob/master/BinaryToPowershellScript/BinaryToPowershellScript.ps1) together with C# code. To bypass Powershell execution policies you can simply copy the code and paste it inside a Powershell console and hit return, after having done this you can convert any file you want just by calling the function BinaryToPowershellScript with the same below parameters.
 
 CodeProject detailed article about how to use this code: [How to Transform Binary Files into Powershell Script(s) in Order to Copy them Silently on a Server](https://www.codeproject.com/Articles/5369565/How-to-Transform-Binary-Files-into-Powershell-Scri)
 
-# Usage
+## Usage
 
- -i, --inputs          Required. Specify the input file(s) to process, you can use also a wildcard pattern or specify multiple files separted by space<br />
- -o, --outputfolder    Specify the output folder where all the powershell scripts will be generated<br />
- -b, --base64          Specify the base64 file format for the powershell script(s), otherwise the hex text format will be used. <br />
- -d, --decimal         Specify the decimal file format for the powershell script(s). <br />
- -c, --compress        Specify to compress the input file(s) with gzip compression. <br />
- -h, --hash            Specify to add a SHA256 hash as check on file(s) integrity in the powershell script(s). <br />
- -s, --single          Specify to create just a single script file for all input files. <br />
- -p, --password        Specify the password used to encrypt data with AES. <br />
- -r, --recurse         Specify to perform recursive search on all input file(s). <br />
- --help                Display this help screen. <br />
- --version             Display version information. <br />
+### Parameters
 
-# Example command lines
- .\\BinaryToPowershellScript.exe -i * -o c:\\temp -r --> it will script all files in the current folder and its subfolders to the output folder c:\\temp by creating a script file for all them with the byte array format.<br />
- .\\BinaryToPowershellScript.exe -i * -o c:\\temp -r -c --> it will script all files in the current folder and its subfolders to the output folder c:\\temp by creating a script file for all them with the byte array format and compressing it with gzip compression.<br />
- .\\BinaryToPowershellScript.exe -i * -o c:\\temp -b --> it will script all files in the current folder to the output folder c:\\temp by creating a script file for all them with the base64 format.<br />
- .\\BinaryToPowershellScript.exe -i * -o c:\\temp -d -s --> it will script all files in the current folder as a single file in the output folder c:\\temp with the decimal format.<br />
- .\\BinaryToPowershellScript.exe -i * -o c:\\temp -s --> it will script all files in the current folder as a single file in the output folder c:\\temp with the byte array format.<br />
- .\\BinaryToPowershellScript.exe -i * -o c:\\temp -b -s --> it will script all files in the current folder as a single file in the output folder c:\\temp with the base64 format.<br />
- .\\BinaryToPowershellScript.exe -i * -o c:\\temp -b -s -h --> it will script all files in the current folder as a single file in the output folder c:\\temp with the base64 format, checking the SHA256 hash for each file after recreation.<br />
- .\\BinaryToPowershellScript.exe -i * c:\\windows\\*.exe -o c:\\temp -s -b -> it will script all files in the current folder and in c:\\windows with *.exe extension as a single file in the output folder c:\\temp with the base64 format.<br />
- .\\BinaryToPowershellScript.exe -i * -o c:\\temp -s -p password --> it will script all files in the current folder as a single file in the output folder c:\\temp with the byte array format encrypting all files with password "password".<br />
+```pwsh
+ -i, --inputs          # Required. Specify the input file(s) to process, you can use also a wildcard pattern or specify multiple files separted by space
+ -o, --outputfolder    # Specify the output folder where all the powershell scripts will be generated
+ -b, --base64          # Specify the base64 file format for the powershell script(s), otherwise the hex text format will be used. 
+ -d, --decimal         # Specify the decimal file format for the powershell script(s). 
+ -c, --compress        # Specify to compress the input file(s) with gzip compression. 
+ -h, --hash            # Specify to add a SHA256 hash as check on file(s) integrity in the powershell script(s). 
+ -s, --single          # Specify to create just a single script file for all input files. 
+ -p, --password        # Specify the password used to encrypt data with AES. 
+ -r, --recurse         # Specify to perform recursive search on all input file(s). 
+ --help                # Display this help screen. 
+ --version             # Display version information. 
+```
 
- # Example output
+### Examples
 
-**.\BinaryToPowershellScript.exe -i * \windows\*.exe -o c:\temp -s -b**
+#### Commands:
+
+```powershell
+ .\BinaryToPowershellScript.exe -i * -o c:\temp -r --> it will script all files in the current folder and its subfolders to the output folder c:\temp by creating a script file for all them with the byte array format.
+ .\BinaryToPowershellScript.exe -i * -o c:\temp -r -c --> it will script all files in the current folder and its subfolders to the output folder c:\temp by creating a script file for all them with the byte array format and compressing it with gzip compression.
+ .\BinaryToPowershellScript.exe -i * -o c:\temp -b --> it will script all files in the current folder to the output folder c:\temp by creating a script file for all them with the base64 format.
+ .\BinaryToPowershellScript.exe -i * -o c:\temp -d -s --> it will script all files in the current folder as a single file in the output folder c:\temp with the decimal format.
+ .\BinaryToPowershellScript.exe -i * -o c:\temp -s --> it will script all files in the current folder as a single file in the output folder c:\temp with the byte array format.
+ .\BinaryToPowershellScript.exe -i * -o c:\temp -b -s --> it will script all files in the current folder as a single file in the output folder c:\temp with the base64 format.
+ .\BinaryToPowershellScript.exe -i * -o c:\temp -b -s -h --> it will script all files in the current folder as a single file in the output folder c:\temp with the base64 format, checking the SHA256 hash for each file after recreation.
+ .\BinaryToPowershellScript.exe -i * c:\windows\*.exe -o c:\temp -s -b -> it will script all files in the current folder and in c:\windows with *.exe extension as a single file in the output folder c:\temp with the base64 format.
+ .\BinaryToPowershellScript.exe -i * -o c:\temp -s -p password --> it will script all files in the current folder as a single file in the output folder c:\temp with the byte array format encrypting all files with password "password".
+```
+ #### Resulting Output:
+```console
+$ .\BinaryToPowershellScript.exe -i * \windows\*.exe -o c:\temp -s -b
+# returns...
 Scripting file .\BinaryToPowershellScript.deps.json 
 Scripting file .\BinaryToPowershellScript.dll 
 Scripting file .\BinaryToPowershellScript.exe 
@@ -60,7 +72,8 @@ Scripting file \windows\winhlp32.exe
 Scripting file \windows\write.exe 
 Creating single script file c:\temp\SingleScript_base64.ps1...
 
-**.\BinaryToPowershellScript.exe -i \windows\*.exe -o c:\temp**
+$ .\BinaryToPowershellScript.exe -i \windows\*.exe -o c:\temp
+# returns...
 Scripting file \windows\bfsvc.exe into c:\temp\bfsvc_exe_script.ps1...
 Scripting file \windows\explorer.exe into c:\temp\explorer_exe_script.ps1...
 Scripting file \windows\HelpPane.exe into c:\temp\HelpPane_exe_script.ps1...
@@ -73,14 +86,12 @@ Scripting file \windows\TbtP2pShortcutService.exe into c:\temp\TbtP2pShortcutSer
 Scripting file \windows\ThunderboltService.exe into c:\temp\ThunderboltService_exe_script.ps1...
 Scripting file \windows\winhlp32.exe into c:\temp\winhlp32_exe_script.ps1...
 Scripting file \windows\write.exe into c:\temp\write_exe_script.ps1...
+```
 
-# Example of generated script files
+#### Generated Script Filess
 
-**Single Base64 Script**
-<img width="1280" alt="image" src="https://github.com/fededim/BinaryToPowershellScript/assets/8364158/85863cc8-8328-4aa4-ab9a-c6fd4cfe30e6">
-
-**Hex ByteArray Script per file**
-<img width="1280" alt="image" src="https://github.com/fededim/BinaryToPowershellScript/assets/8364158/376fb77d-fef0-48c1-9a98-5460cbb2fce9">
-
-**Decimal ByteArray Script per file**
-<img width="1279" alt="image" src="https://github.com/fededim/BinaryToPowershellScript/assets/8364158/d2d883bb-fa93-48cd-8baa-bbe2dd253a93">
+Encoding | # Files | Screenshot
+:--:|:--:|--
+<strong>`Base64`</strong> | ALL in one | <img width="1000" alt="image" src="https://github.com/fededim/BinaryToPowershellScript/assets/8364158/85863cc8-8328-4aa4-ab9a-c6fd4cfe30e6">
+<strong>`Hex`<br/>`ByteArray`</strong> | 1/script| <img width="1000" alt="image" src="https://github.com/fededim/BinaryToPowershellScript/assets/8364158/376fb77d-fef0-48c1-9a98-5460cbb2fce9">
+<strong>`Decimal`<br/>`ByteArray`</strong> | 1/script | <img width="1000" alt="image" src="https://github.com/fededim/BinaryToPowershellScript/assets/8364158/d2d883bb-fa93-48cd-8baa-bbe2dd253a93">
